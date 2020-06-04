@@ -1,0 +1,338 @@
+
+
+<!DOCTYPE html>
+<html lang="zh">
+<head prefix="og: http://ogp.me/ns#">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1">
+    <meta name="description" content="记录所学所想，只为拾遗补缺">
+    <title>Redis Cluster 安装 | Mustone&#39;s blog</title>
+
+    <!-- Open Graph -->
+    <meta name="description" content="&amp;#x73AF;&amp;#x5883;&amp;#x51C6;&amp;#x5907;&amp;#x963F;&amp;#x91CC;&amp;#x4E91;&amp;#x7533;&amp;#x8BF7;3&amp;#x53F0;ECS&amp;#xFF0C;&amp;#x5982;&amp;#x4E0B;&amp;#xFF1A;    &amp;#x5E8F;&amp;#x53F7; &amp;#x5185;&amp;#x7F51;IP OS     A 172.16.190.78 CentOS 7.6   B 172.16">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Redis Cluster 安装">
+<meta property="og:url" content="https://yongjiang043.github.io/2020/06/04/redis cluster安装/index.html">
+<meta property="og:site_name" content="Mustone&#39;s blog">
+<meta property="og:description" content="&amp;#x73AF;&amp;#x5883;&amp;#x51C6;&amp;#x5907;&amp;#x963F;&amp;#x91CC;&amp;#x4E91;&amp;#x7533;&amp;#x8BF7;3&amp;#x53F0;ECS&amp;#xFF0C;&amp;#x5982;&amp;#x4E0B;&amp;#xFF1A;    &amp;#x5E8F;&amp;#x53F7; &amp;#x5185;&amp;#x7F51;IP OS     A 172.16.190.78 CentOS 7.6   B 172.16">
+<meta property="og:locale" content="zh">
+<meta property="og:updated_time" content="2020-06-04T13:46:53.484Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Redis Cluster 安装">
+<meta name="twitter:description" content="&amp;#x73AF;&amp;#x5883;&amp;#x51C6;&amp;#x5907;&amp;#x963F;&amp;#x91CC;&amp;#x4E91;&amp;#x7533;&amp;#x8BF7;3&amp;#x53F0;ECS&amp;#xFF0C;&amp;#x5982;&amp;#x4E0B;&amp;#xFF1A;    &amp;#x5E8F;&amp;#x53F7; &amp;#x5185;&amp;#x7F51;IP OS     A 172.16.190.78 CentOS 7.6   B 172.16">
+
+    <script type="application/ld+json">
+{
+  "@context": "http://schema.org",
+  "@type": "Person",
+  "email": "mailto:",
+  "image": "",
+  "name": "mustone",
+  "url": "https://yongjiang043.github.io"
+}
+</script>
+    <script>
+    var algoliaEnabled = false;
+    
+</script>
+
+    
+
+    
+    
+        <link href="https://fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+    
+    
+    
+        <!-- stylesheets list from config.yml -->
+        
+        <link rel="stylesheet" href="/css/aloha.css">
+        
+        <link rel="stylesheet" href="//cdn.bootcss.com/semantic-ui/2.2.4/semantic.min.css">
+        
+        <link rel="stylesheet" href="//cdn.bootcss.com/magnific-popup.js/1.1.0/magnific-popup.min.css">
+        
+    
+
+</head>
+<body id="body" style="margin-bottom: 0;" class="pushable">
+
+    <div class="ui top fixed menu">
+        <a class="item" id="menu-icon"><i class="sidebar icon"></i></a>
+    </div>
+
+    <div id="menu-sidebar" class="ui left vertical sidebar menu">
+
+    <div id="sidebar-top">
+        <div class="content">
+            <h3>Mustone&#39;s blog</h3>
+        </div>
+    </div>
+    <div class="ui container sidebar-card">
+    <div class="ui people shape content">
+        <div class="active side">
+            <div class="ui card">
+                <div class="image">
+                    <img class="ui medium bordered image" src="/images/avatar.jpg">
+                </div>
+                <div class="content">
+                    <a class="header">mustone</a>
+                    
+                        <div class="meta">
+                            始于代码，善其身而济天下
+                        </div>
+                    
+                </div>
+                <div class="extra content">
+                    <div class="ui list">
+                        
+                        <div class="item">
+                            <i class="marker icon" style="float: left"></i>
+                            <div class="content">杭州</div>
+                        </div>
+                        
+                        
+                    </div>
+
+                </div>
+                <div class="extra content">
+                    <div class="ui list">
+                        
+
+                                <a href="https://github.com/yongjiang043"><i class="large github icon" style="float: left"></i></a>
+
+                            
+
+                                <a href="https://weibo.com/whateveritis"><i class="large weibo icon" style="float: left"></i></a>
+
+                            
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+
+    
+    
+
+    
+
+    
+    <a href="/index.html" class="item" >
+        <i class="home icon"></i>
+        首页
+    </a>
+
+    
+
+    
+</div>
+
+    <div class="pusher body-content">
+        <div id="content" class="ui main container">
+            <!--<div class="ui one column grid">-->
+                <!--<div class="column">-->
+                    <!--<div class="ui main container">-->
+                        <div id="post-redis cluster安装" class="ui main container article-type-post">
+
+    
+
+    <div class="ui divided grid">
+
+        <div class="two column row" id="article-content">
+
+            <div class="thirteen wide computer thirteen wide tablet sixteen wide mobile column">
+                
+
+<h1 class="ui header">
+    
+    Redis Cluster 安装
+</h1>
+
+
+
+                <div class="article-inner">
+
+                    <div class="article-entry" itemprop="articleBody">
+                        
+                        <h3 id="&#x73AF;&#x5883;&#x51C6;&#x5907;"><a href="#&#x73AF;&#x5883;&#x51C6;&#x5907;" class="headerlink" title="&#x73AF;&#x5883;&#x51C6;&#x5907;"></a>&#x73AF;&#x5883;&#x51C6;&#x5907;</h3><p>&#x963F;&#x91CC;&#x4E91;&#x7533;&#x8BF7;3&#x53F0;ECS&#xFF0C;&#x5982;&#x4E0B;&#xFF1A;</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">&#x5E8F;&#x53F7;</th>
+<th style="text-align:center">&#x5185;&#x7F51;IP</th>
+<th style="text-align:center">OS</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">A</td>
+<td style="text-align:center">172.16.190.78</td>
+<td style="text-align:center">CentOS 7.6</td>
+</tr>
+<tr>
+<td style="text-align:left">B</td>
+<td style="text-align:center">172.16.242.36</td>
+<td style="text-align:center">CentOS 7.6</td>
+</tr>
+<tr>
+<td style="text-align:left">C</td>
+<td style="text-align:center">172.16.190.77</td>
+<td style="text-align:center">CentOS 7.6</td>
+</tr>
+</tbody>
+</table>
+<h3 id="&#x8282;&#x70B9;&#x89C4;&#x5212;"><a href="#&#x8282;&#x70B9;&#x89C4;&#x5212;" class="headerlink" title="&#x8282;&#x70B9;&#x89C4;&#x5212;"></a>&#x8282;&#x70B9;&#x89C4;&#x5212;</h3><p>&#x91C7;&#x7528;&#x4E09;&#x4E3B;&#x4E09;&#x4ECE;:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">&#x4E3B;&#x8282;&#x70B9;</th>
+<th style="text-align:center">&#x4ECE;&#x8282;&#x70B9;</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">172.16.190.78:7000</td>
+<td style="text-align:center">172.16.242.36:7001</td>
+</tr>
+<tr>
+<td style="text-align:center">172.16.242.36:7000</td>
+<td style="text-align:center">172.16.190.77:7001</td>
+</tr>
+<tr>
+<td style="text-align:center">172.16.190.77:7000</td>
+<td style="text-align:center">172.16.190.78:7001</td>
+</tr>
+</tbody>
+</table>
+<h3 id="&#x90E8;&#x7F72;Redis"><a href="#&#x90E8;&#x7F72;Redis" class="headerlink" title="&#x90E8;&#x7F72;Redis"></a>&#x90E8;&#x7F72;Redis</h3><h4 id="&#x5B89;&#x88C5;"><a href="#&#x5B89;&#x88C5;" class="headerlink" title="&#x5B89;&#x88C5;"></a>&#x5B89;&#x88C5;</h4><p>&#x5728;&#x6BCF;&#x53F0;&#x670D;&#x52A1;&#x5668;&#x4E0A;&#x6267;&#x884C;&#x4EE5;&#x4E0B;&#x64CD;&#x4F5C;</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">$ cd ~/software</span><br><span class="line"># &#x4E0B;&#x8F7D;redis&#x5B89;&#x88C5;&#x5305;</span><br><span class="line">$ wget http://download.redis.io/releases/redis-4.0.11.tar.gz</span><br><span class="line">$ tar -xf redis-4.0.11.tar.gz</span><br><span class="line"></span><br><span class="line">#&#x7F16;&#x8BD1;</span><br><span class="line">$ cd redis-4.0.11</span><br><span class="line">$ make</span><br><span class="line"></span><br><span class="line"># &#x521B;&#x5EFA;redis&#x5B89;&#x88C5;&#x76EE;&#x5F55;&#xFF0C;&#x5E76;&#x5C06;&#x53EF;&#x6267;&#x884C;&#x6587;&#x4EF6;&#x62F7;&#x8D1D;&#x5230;bin&#x4E0B;</span><br><span class="line">$ mkdir -pv ~/redis/conf ~/redis/bin ~/redis/log  ~/redis/data/7000   ~/redis/data/7001</span><br><span class="line">$ cd ~/redis</span><br><span class="line">$ cp ../software/redis-4.0.11/src/redis-* bin/</span><br><span class="line">$ rm bin/*.c *.o</span><br></pre></td></tr></table></figure>
+<h4 id="&#x914D;&#x7F6E;"><a href="#&#x914D;&#x7F6E;" class="headerlink" title="&#x914D;&#x7F6E;"></a>&#x914D;&#x7F6E;</h4><p>&#x5728;&#x6BCF;&#x53F0;&#x673A;&#x5668;&#x4E0A;&#x521B;&#x5EFA;redis&#x5B9E;&#x4F8B;&#x7684;&#x914D;&#x7F6E;&#xFF0C;&#x5982;&#x5728;A&#x8282;&#x70B9;&#x4E0A;</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"># &#x914D;&#x7F6E;7000&#x7AEF;&#x53E3;&#x5B9E;&#x4F8B;</span><br><span class="line">$ vim ~/redis/conf/redis7000.conf</span><br><span class="line">bind 172.16.190.78</span><br><span class="line">  </span><br><span class="line">port 7000</span><br><span class="line">cluster-enabled  yes</span><br><span class="line">cluster-config-file nodes.conf</span><br><span class="line">cluster-node-timeout 5000</span><br><span class="line">appendonly yes</span><br><span class="line">timeout 3600</span><br><span class="line">daemonize yes</span><br><span class="line">  </span><br><span class="line">pidfile /home/dolphin/redis/pid/redis7000.pid</span><br><span class="line">logfile &quot;/home/dolphin/redis/log/redis7000.log&quot;</span><br><span class="line">dir &quot;/home/dolphin/redis/data/7000&quot;</span><br><span class="line">  </span><br><span class="line">rename-command FLUSHALL &quot;&quot;</span><br><span class="line">rename-command FLUSHDB &quot;&quot;</span><br><span class="line">rename-command KEYS &quot;&quot;</span><br><span class="line"></span><br><span class="line"># &#x914D;&#x7F6E;7001&#x7AEF;&#x53E3;&#x5B9E;&#x4F8B;</span><br><span class="line">$ vim ~/redis/conf/redis7000.conf</span><br><span class="line">bind 172.16.190.78</span><br><span class="line">  </span><br><span class="line">port 7001</span><br><span class="line">cluster-enabled  yes</span><br><span class="line">cluster-config-file nodes.conf</span><br><span class="line">cluster-node-timeout 5000</span><br><span class="line">appendonly yes</span><br><span class="line">timeout 3600</span><br><span class="line">daemonize yes</span><br><span class="line">  </span><br><span class="line">pidfile /home/dolphin/redis/pid/redis7001.pid</span><br><span class="line">logfile &quot;/home/dolphin/redis/log/redis7001.log&quot;</span><br><span class="line">dir &quot;/home/dolphin/redis/data/7001&quot;</span><br><span class="line">  </span><br><span class="line">rename-command FLUSHALL &quot;&quot;</span><br><span class="line">rename-command FLUSHDB &quot;&quot;</span><br><span class="line">rename-command KEYS &quot;&quot;</span><br></pre></td></tr></table></figure>
+<p>&#x5176;&#x4ED6;&#x4E24;&#x4E2A;&#x8282;&#x70B9;&#x7C7B;&#x4F3C;&#x3002;</p>
+<h4 id="&#x542F;&#x52A8;&#x5B9E;&#x4F8B;"><a href="#&#x542F;&#x52A8;&#x5B9E;&#x4F8B;" class="headerlink" title="&#x542F;&#x52A8;&#x5B9E;&#x4F8B;"></a>&#x542F;&#x52A8;&#x5B9E;&#x4F8B;</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ cd ~/redis</span><br><span class="line">$ bin/redis-server conf/redis7000.conf</span><br><span class="line">$ bin/redis-server conf/redis7001.conf</span><br></pre></td></tr></table></figure>
+<h4 id="&#x521B;&#x5EFA;&#x96C6;&#x7FA4;"><a href="#&#x521B;&#x5EFA;&#x96C6;&#x7FA4;" class="headerlink" title="&#x521B;&#x5EFA;&#x96C6;&#x7FA4;"></a>&#x521B;&#x5EFA;&#x96C6;&#x7FA4;</h4><p>&#x5982;&#x679C;&#x662F;redis 5&#xFF0C;&#x53EF;&#x4EE5;&#x76F4;&#x63A5;&#x7528;redis-cli&#x5DE5;&#x5177;&#x6765;&#x521B;&#x5EFA;&#x96C6;&#x7FA4;&#x3002;&#x5BF9;&#x4E8E;Redis 4&#x6216;3&#xFF0C;&#x9700;&#x8981;&#x53E6;&#x4E00;&#x4E2A;&#x5DE5;&#x5177; redis-trib.rb&#x6765;&#x5E2E;&#x5FD9;&#x3002;&#x5BF9;&#x4E8E; redis-trib.rb&#xFF0C;&#x9700;&#x8981;&#x5B89;&#x88C5;redis gem&#x3002;</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">$ gem install redis</span><br><span class="line">Fetching redis-4.1.4.gem</span><br><span class="line">Successfully installed redis-4.1.4</span><br><span class="line">Parsing documentation for redis-4.1.4</span><br><span class="line">Installing ri documentation for redis-4.1.4</span><br><span class="line">Done installing documentation for redis after 1 seconds</span><br><span class="line">1 gem installed</span><br></pre></td></tr></table></figure>
+<p>&#x82E5;&#x62A5;&#x9519;&#x8BEF;&#x5982;&#x4E0B;&#xFF0C;&#x9700;&#x8981;&#x5347;&#x7EA7;ruby&#x7684;&#x7248;&#x672C;&#xFF0C;&#x53C2;&#x8003;&#x9644;&#x5F55;&#x90E8;&#x5206;&#x3002;<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Fetching: redis-4.1.4.gem (100%)</span><br><span class="line">ERROR:  Error installing redis:</span><br><span class="line">        redis requires Ruby version &gt;= 2.3.0.</span><br></pre></td></tr></table></figure></p>
+<p>&#x7136;&#x540E;&#x901A;&#x8FC7; redis-trib.rb &#x521B;&#x5EFA;redis&#x96C6;&#x7FA4;</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ redis-trib.rb create --replicas 1 172.16.190.78:7000 172.16.242.36:7000 172.16.190.79:7000 172.16.190.78:7001 172.16.242.36:7001 172.16.190.79:7001</span><br></pre></td></tr></table></figure>
+<p>&#x5728;&#x5F39;&#x51FA;&#x7684;&#x786E;&#x8BA4;&#x4E2D;&#x8F93;&#x5165;yes&#xFF0C;&#x4E00;&#x5207;&#x987A;&#x5229;&#x7684;&#x8BDD;&#x6700;&#x7EC8;&#x4F1A;&#x51FA;&#x73B0;&#x5982;&#x4E0B;&#x63D0;&#x793A;</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[OK] All 16384 slots covered</span><br></pre></td></tr></table></figure>
+<p>&#x6B64;&#x65F6;&#x4EE3;&#x8868; redis cluster&#x5DF2;&#x7ECF;&#x90E8;&#x7F72;&#x6210;&#x529F;&#x3002;</p>
+<h3 id="&#x9A8C;&#x8BC1;"><a href="#&#x9A8C;&#x8BC1;" class="headerlink" title="&#x9A8C;&#x8BC1;"></a>&#x9A8C;&#x8BC1;</h3><p>&#x767B;&#x9646;&#x4EFB;&#x610F;&#x8282;&#x70B9;</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">$ redis-cli -h 72.16.190.78 -p 7000 -c</span><br><span class="line">172.16.190.78:7000&gt; cluster nodes</span><br><span class="line">4a1b49cd77dbd18eba677663777f211be6f68dae 172.16.242.36:7001@17001 slave 2c75029ab638a48537a4c02ed0ca77a19fc4106b 0 1591274265000 5 connected</span><br><span class="line">d0381ef4aad364c42e08bf1c2d78168f4901bd90 172.16.190.78:7001@17001 slave 08a5e808d2e6f6b231d73519bd4f05f74614c2a2 0 1591274265000 4 connected</span><br><span class="line">08a5e808d2e6f6b231d73519bd4f05f74614c2a2 172.16.190.77:7000@17000 master - 0 1591274266097 3 connected 10923-16383</span><br><span class="line">e5c154dcf02526b807c67bebf0a63b4c98118ffe 172.16.190.77:7001@17001 slave 50884e234c5f1ccf03f5a6d1cc4e6e6dc4779752 0 1591274266197 6 connected</span><br><span class="line">2c75029ab638a48537a4c02ed0ca77a19fc4106b 172.16.190.78:7000@17000 myself,master - 0 1591274264000 1 connected 0-5460</span><br><span class="line">50884e234c5f1ccf03f5a6d1cc4e6e6dc4779752 172.16.242.36:7000@17000 master - 0 1591274265193 2 connected 5461-10922</span><br><span class="line">172.16.190.78:7000&gt;</span><br></pre></td></tr></table></figure>
+<p>&#x7B2C;&#x4E00;&#x5217;&#x4E3A;&#x8282;&#x70B9;id&#xFF0C;&#x53EF;&#x4EE5;&#x770B;&#x5230;&#x8282;&#x70B9;172.16.190.78:7000&#x4E3A;master&#xFF0C;&#x4E14;&#x5206;&#x914D;&#x7684;slot&#x4E3A;0-5460&#xFF0C;&#x800C;172.16.242.36:7001&#x4E3A;&#x5B83;&#x7684;slave&#x8282;&#x70B9;&#x3002;</p>
+<h3 id="&#x9644;&#x5F55;&#xFF1A;&#x5347;&#x7EA7;rvm&#x5B89;&#x88C5;ruby"><a href="#&#x9644;&#x5F55;&#xFF1A;&#x5347;&#x7EA7;rvm&#x5B89;&#x88C5;ruby" class="headerlink" title="&#x9644;&#x5F55;&#xFF1A;&#x5347;&#x7EA7;rvm&#x5B89;&#x88C5;ruby"></a>&#x9644;&#x5F55;&#xFF1A;&#x5347;&#x7EA7;rvm&#x5B89;&#x88C5;ruby</h3><p>&#x5347;&#x7EA7;rvm&#x7684;&#x7248;&#x672C;</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ curl -sSL https://get.rvm.io | bash -s stable</span><br></pre></td></tr></table></figure>
+<p>root&#x7528;&#x6237;rvm&#x4E0B;&#x8F7D;&#x7684;&#x8DEF;&#x5F84;&#x4E3A;/usr/local/rvm</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">#&#x89E3;&#x538B;rvm&#x538B;&#x7F29;&#x5305;</span><br><span class="line">$ cd /usr/local/rvm/archives</span><br><span class="line">$ tar -xf rvm-1.29.10.tgz</span><br></pre></td></tr></table></figure>
+<p>&#x53E6;&#x8D77;&#x4E00;&#x4E2A;&#x7A97;&#x53E3;</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ cd /usr/local/rvm/archives/rvm-1.29.10/scripts</span><br><span class="line">$ source rvm</span><br><span class="line"># &#x4FEE;&#x6539;rvm&#x7684;ruby&#x5B89;&#x88C5;&#x6E90;&#xFF0C;&#x4FEE;&#x6539; RVM &#x7684; Ruby &#x5B89;&#x88C5;&#x6E90;&#x5230; Ruby China &#x7684; Ruby &#x955C;&#x50CF;&#x670D;&#x52A1;&#x5668;&#xFF0C;&#x8FD9;&#x6837;&#x80FD;&#x63D0;&#x9AD8;&#x5B89;&#x88C5;&#x901F;&#x5EA6;</span><br><span class="line">$ echo &quot;ruby_url=https://cache.ruby-china.org/pub/ruby&quot; &gt; /usr/local/rvm/user/db</span><br></pre></td></tr></table></figure>
+<p>&#x67E5;&#x770B;ruby&#x7684;&#x7248;&#x672C;&#xFF0C;&#x5E76;&#x5B89;&#x88C5;</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">$ rvm list known</span><br><span class="line"># MRI Rubies</span><br><span class="line">[ruby-]1.8.6[-p420]</span><br><span class="line">[ruby-]1.8.7[-head] # security released on head</span><br><span class="line">[ruby-]1.9.1[-p431]</span><br><span class="line">[ruby-]1.9.2[-p330]</span><br><span class="line">[ruby-]1.9.3[-p551]</span><br><span class="line">[ruby-]2.0.0[-p648]</span><br><span class="line">[ruby-]2.1[.10]</span><br><span class="line">[ruby-]2.2[.10]</span><br><span class="line">[ruby-]2.3[.8]</span><br><span class="line">[ruby-]2.4[.9]</span><br><span class="line">[ruby-]2.5[.7]</span><br><span class="line">[ruby-]2.6[.5]</span><br><span class="line">[ruby-]2.7[.0]</span><br><span class="line">ruby-head</span><br><span class="line"></span><br><span class="line">$ rvm install 2.4.9</span><br></pre></td></tr></table></figure>
+<p>&#x5B89;&#x88C5;&#x6210;&#x529F;&#x540E;&#xFF0C;&#x9ED8;&#x8BA4;&#x4F7F;&#x7528;&#x7684;&#x8FD8;&#x662F;ruby&#x8001;&#x7248;&#x672C;&#xFF0C;&#x9700;&#x8981;&#x6307;&#x5B9A;&#x4F7F;&#x7528;&#x65B0;&#x7684;&#x7248;&#x672C;&#x3002;</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ rvm use 2.4.9</span><br></pre></td></tr></table></figure>
+<p>&#x9A8C;&#x8BC1;&#x5F53;&#x524D;ruby&#x7684;&#x7248;&#x672C;</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ ruby -version</span><br><span class="line">ruby 2.4.9p362 (2019-10-02 revision 67824) [x86_64-linux]</span><br></pre></td></tr></table></figure>
+<p>&#x5347;&#x7EA7;&#x6210;&#x529F;&#x3002;</p>
+
+                        
+                    </div>
+
+                    
+                    
+                    
+
+                    <div class="description post-description">
+    <span class="post-description-item">
+        <time datetime="2020-06-04T13:29:16.000Z" itemprop="datePublished">2020-06-04</time>
+
+    </span>
+    <span class="post-description-item">
+        
+    </span>
+</div>
+
+                </div>
+                
+                <div id="pagination" class="nav-web ui text container pagination">
+
+    <div class="ui stackable two column divided grid container">
+        <div class="row">
+            <div class="column nav-left">
+                
+
+                <a class="ui tiny button disabled"><i class="angle left icon"></i>前一篇</a>
+
+                
+            </div>
+            <div class="column nav-right">
+                
+
+                <a href="/2018/07/14/数据变更历史记录/" class="ui tiny button">
+                    
+                    数据变更历史记录
+                    
+                    <i class="angle right icon"></i></a>
+                
+            </div>
+        </div>
+    </div>
+
+</div>
+                
+            </div>
+
+            
+            <div class="three wide computer three wide tablet column">
+
+                <div class="ui sticky article-toc" id="article-toc">
+                    <!-- toc -->
+                    <ol class="ui ordered list"><li><a href="#环境准备"><span>环境准备</span></a></li><li><a href="#节点规划"><span>节点规划</span></a></li><li><a href="#部署Redis"><span>部署Redis</span></a><ol><li><a href="#安装"><span>安装</span></a></li><li><a href="#配置"><span>配置</span></a></li><li><a href="#启动实例"><span>启动实例</span></a></li><li><a href="#创建集群"><span>创建集群</span></a></li></ol></li><li><a href="#验证"><span>验证</span></a></li><li><a href="#附录：升级rvm安装ruby"><span>附录：升级rvm安装ruby</span></a></li></ol>
+                </div>
+
+            </div>
+            
+
+        </div>
+    </div>
+</div>
+
+
+                    <!--</div>-->
+                <!--</div>-->
+            <!--</div>-->
+        </div>
+        <div class="ui vertical footer segment">
+    <div class="ui center aligned container">
+        <div class="ui inverted section divider"></div>
+        Copyright &copy; 2020 <a href="/">mustone</a>
+    </div>
+</div>
+
+    </div>
+
+
+
+
+<!-- scripts list from theme config.yml -->
+
+<script src="//cdn.bootcss.com/jquery/3.1.0/jquery.min.js"></script>
+
+<script src="//cdn.bootcss.com/semantic-ui/2.2.4/semantic.min.js"></script>
+
+<script src="//cdn.bootcss.com/algoliasearch/3.18.1/algoliasearch.min.js"></script>
+
+<script src="//cdn.bootcss.com/algoliasearch-helper-js/2.13.0/algoliasearch.helper.min.js"></script>
+
+<script src="/js/semantic-ui-algolia.js"></script>
+
+<script src="/js/aloha-events.js"></script>
+
+
+
+</body>
+</html>
